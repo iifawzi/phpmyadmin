@@ -2919,10 +2919,13 @@ class Privileges
         if (isset($dbname)) {
             if (is_array($dbname)) {
                 $db_and_table = $dbname;
-                $return_db = $dbname;
+                $unescaped_dbname = [];
                 foreach ($db_and_table as $key => $db_name) {
+                    $unescaped_name = Util::unescapeMysqlWildcards($db_name);
+                    $unescaped_dbname[] = $unescaped_name;
                     $db_and_table[$key] .= '.';
                 }
+                $return_db = $unescaped_dbname;
             } else {
                 $unescaped_db = Util::unescapeMysqlWildcards($dbname);
                 $db_and_table = Util::backquote($unescaped_db) . '.';
