@@ -240,7 +240,7 @@ class PrivilegesController extends AbstractController
                     ($username ?? ''),
                     ($hostname ?? ''),
                     ($tablename ?? ($routinename ?? '')),
-                    ($dbname ?? ''),
+                    (Util::unescapeMysqlWildcards($dbname ?? '')),
                     $itemType
                 );
             }
@@ -261,7 +261,7 @@ class PrivilegesController extends AbstractController
          */
         if (isset($_POST['revokeall'])) {
             [$message, $sql_query] = $serverPrivileges->getMessageAndSqlQueryForPrivilegesRevoke(
-                ($dbname ?? ''),
+                (Util::unescapeMysqlWildcards($dbname ?? '')),
                 ($tablename ?? ($routinename ?? '')),
                 $username,
                 $hostname,
