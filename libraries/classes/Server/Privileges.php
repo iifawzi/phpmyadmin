@@ -3257,12 +3257,19 @@ class Privileges
             'username' => $username,
             'hostname' => $hostname,
         ];
+        $unescaped_dbnames = [];
         if (! is_array($dbname) && strlen($dbname) > 0) {
             $_params['dbname'] = $dbname;
             if (strlen($tablename) > 0) {
                 $_params['tablename'] = $tablename;
             }
         } else {
+            if (is_array($dbname)) {
+                foreach ($dbname as $db_name) {
+                    $unescaped_name = Util::unescapeMysqlWildcards($db_name);
+                    $unescaped_dbnames[] = $unescaped_name;
+                }
+            }
             $_params['dbname'] = $dbname;
         }
 
@@ -3335,7 +3342,7 @@ class Privileges
             'privileges_table' => $privilegesTable,
             'table_specific_rights' => $tableSpecificRights,
             'change_password' => $changePassword,
-            'database' => $dbname,
+            'database' => is_array($dbname) && count($dbname) > 1 ? $unescaped_dbnames : $dbname,
             'dbname' => $url_dbname,
             'username' => $username,
             'hostname' => $hostname,
