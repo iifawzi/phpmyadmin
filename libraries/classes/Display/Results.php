@@ -4707,12 +4707,6 @@ class Results
                 $_url_params['single_table'] = 'true';
             }
 
-            // In case this query doesn't involve any tables,
-            // implies only raw query is to be exported
-            if (! $analyzed_sql_results['select_tables']) {
-                $_url_params['raw_query'] = 'true';
-            }
-
             $_url_params['unlim_num_rows'] = $this->properties['unlim_num_rows'];
 
             /**
@@ -4729,6 +4723,12 @@ class Results
                 if ($_url_params['table'] === false) {
                     unset($_url_params['table']);
                 }
+            }
+
+            // In case this query doesn't involve any tables,
+            // implies only raw query is to be exported
+            if (! $analyzed_sql_results['select_tables'] && empty($_url_params['table'])) {
+                $_url_params['raw_query'] = 'true';
             }
 
             $fields_meta = $this->properties['fields_meta'];
